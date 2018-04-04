@@ -4,6 +4,10 @@ int DATA = 8;// Контакт Data на сдвиговом регистре, н
 int LATCH = 9 ;// Контакт Latch, на 9 контакт.
 int CLK = 10;// Контакт Clock, на 10 контакт.
 int timer = 3000;//Время отображения рисунка
+int bait1;
+int bait2;
+int bait3;
+
 byte strok[] =  {
     //Сам рисунок для матрицы 8X24,Восемь строк, по восемь бит.Единица, светодиод горит. Ноль не горит.
   B01100110,B00011100,B00111000,
@@ -26,6 +30,19 @@ byte next[] = {
   B00001000,B01000010,B00010000,
   B00001000,B10000001,B00010000 
 };
+/*
+byte Roma[] = {
+{
+  B11100001,B11001000,B10001000,
+  B10010010,B00101000,B10010100,
+  B10001010,B00101101,B10100010,
+  B10010010,B00101010,B10100010,
+  B11100010,B00101000,B10111110,
+  B10000010,B00101000,B10100010,
+  B10000010,B00101000,B10100010,
+  B10000001,B11001000,B10100010
+};
+*/
 
 byte ryad[] = {127,191,223,239,247,251,253,254};//Порядок строк котрые загораются(в десятичном формате, можно и в бинарном)В бинарном наоборот ноль горит, единица не горит. 
 void setup()
@@ -39,19 +56,55 @@ void loop()
 {
   for (int i = 0; i<8; i++)//Счётчик котрый переключает, ряды и строки.
   {
-    for (int s=0; s<24; s++)
+    if (i==0)
     {
+      bait1 = 0; bait2 = 1; bait3 = 2;
+    }
+     if (i==1)
+    {
+      bait1 = 3; bait2 = 4; bait3 = 5;
+    }   
+    if (i==2)
+    {
+      bait1 = 6; bait2 = 7; bait3 = 8;
+    }
+    if (i==3)
+    {
+      bait1 = 9; bait2 = 10; bait3 = 11;
+    }
+    if (i==4)
+    {
+      bait1 = 12; bait2 = 13; bait3 = 14;
+    }
+    if (i==5)
+    {
+      bait1 = 15; bait2 = 16; bait3 = 17;
+    }
+    if (i==6)
+    {
+      bait1 = 18; bait2 = 19; bait3 = 20;
+    }
+    if (i==7)
+    {
+      bait1 = 21; bait2 = 22; bait3 = 23;
+    }
+
+        
     if (timer > millis())
     {
   digitalWrite(LATCH,LOW);//На Latch подаётся ноль, отщёлкивая регистр.
-  shiftOut(DATA,CLK,LSBFIRST,strok[i+s]);//строки, слева на право (1 горит)
+  shiftOut(DATA,CLK,LSBFIRST,strok[bait1]);//строки, слева на право (1 горит)
+  shiftOut(DATA,CLK,LSBFIRST,strok[bait2]);
+  shiftOut(DATA,CLK,LSBFIRST,strok[bait3]);
   shiftOut(DATA,CLK,MSBFIRST,ryad[i]);//Ряды которые переключаются по очереди слева на право.
   digitalWrite(LATCH,HIGH);//На Latch подаётся единица, защёлкивая регистр.
     }
   else
   {
     digitalWrite(LATCH,LOW);//На Latch подаётся ноль, отщёлкивая регистр.
-  shiftOut(DATA,CLK,LSBFIRST,next[i+s]);//строки, слева на право (1 горит)
+  shiftOut(DATA,CLK,LSBFIRST,next[bait1]);//строки, слева на право (1 горит)
+  shiftOut(DATA,CLK,LSBFIRST,next[bait2]);
+  shiftOut(DATA,CLK,LSBFIRST,next[bait3]);
   shiftOut(DATA,CLK,MSBFIRST,ryad[i]);//Ряды которые переключаются по очереди слева на право.
   digitalWrite(LATCH,HIGH);//На Latch подаётся единица, защёлкивая регистр.
   }
@@ -62,7 +115,7 @@ void loop()
   shiftOut(DATA,CLK,LSBFIRST,B0000000);
   shiftOut(DATA,CLK,MSBFIRST,B0000000);//Ряды которые переключаются по очереди слева на право.
   digitalWrite(LATCH,HIGH);//На Latch подаётся единица, защёлкивая регистр.
-    }
+    
   }
     
   }
